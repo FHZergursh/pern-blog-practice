@@ -22,7 +22,7 @@ async function getPgVersion() {
   console.log(result[0]);
 }
 
-getPgVersion();
+//getPgVersion();     
 
 app.use("/api/blogs", blogRoutes) // routes/blogRoutes.js 
 
@@ -33,7 +33,7 @@ async function initDB() {
     CREATE TABLE IF NOT EXISTS blogTable (
       blogId SERIAL PRIMARY KEY,
       title VARCHAR(255) NOT NULL,
-      text DECIMAL(10, 2) NOT NULL,
+      text VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     `;
