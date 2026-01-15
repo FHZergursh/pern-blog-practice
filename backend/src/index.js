@@ -13,8 +13,8 @@ const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
 app.use(express.json())
 app.use(cors())
 
-const sql = neon(
-  `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=require&channel_binding=require`
+export const sql = neon( //data taken from the env
+  `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=require&channel_binding=require` 
 );
 
 async function getPgVersion() {
@@ -24,9 +24,29 @@ async function getPgVersion() {
 
 getPgVersion();
 
-app.use("/api/blogs", blogRoutes)
+app.use("/api/blogs", blogRoutes) // routes/blogRoutes.js 
 
 
-app.listen(PORT, () => {
-  console.log(`app listening on port ${PORT}`)
+async function initDB() {
+  try {
+    await sql`
+    CREATE TABLE IF NOT EXISTS blogTable (
+      blogId SERIAL PRIMARY KEY,
+      title VARCHAR(255) NOT NULL,
+      text DECIMAL(10, 2) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    `;
+
+    console.log("Database initialized successfully!")
+
+  } catch (error) {
+    console.log("Error initDB", error)
+  }
+}
+
+initDB().then(() => {
+    app.listen(PORT, () => {
+    console.log("Server is running on port " + PORT)
+  })
 })
