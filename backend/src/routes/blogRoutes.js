@@ -55,7 +55,7 @@ router.put("/:id", async (req, res) => {
     WHERE blogid = ${blogid}
     RETURNING *`
 
-    return res.status(200).json({success: true, data: updatedBlog})
+    return res.status(200).json({success: true, data: updatedBlog[0]})
     
   } catch (error) {
     console.log("Error in update blogs, ", error)
@@ -67,7 +67,28 @@ router.put("/:id", async (req, res) => {
 
 //delete blog post 
 router.delete("/:id", async (req, res) => {
-  
+  try {
+    const {blogid} = req.params
+
+    if (!blogid) {
+      return res.status(400).json({success: false, message: "Blog entry not found"})
+    }
+
+    const deletedBlog = await sql `DELETE FROM blogtable
+    WHERE blogid = ${blogid}
+    RETURNING *`
+
+    if (deletedBlog === 0) {
+      return res.status(404).json({success: false, message: "Failed to delete blog "})
+    }
+
+    return res.status(200).json({success: true, data: deletedBlog[0]})
+
+
+  } catch (error) {
+    console.log("Error in delete blogs, ", error)
+    res.status(500).json({success: false, message: "Internal server error"})
+  }
 })
 
 
