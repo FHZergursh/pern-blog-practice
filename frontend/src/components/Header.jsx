@@ -1,13 +1,15 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
-    <div className='bg-blue-500 p-10'>
-    <div className='flex justify-center '>
-      <div className='px-10'>Home Page</div>
-      <div className='px-10'>Admin Page</div>
-    </div>
-
+    <div className='bg-slate-800 shadow-lg flex items-center justify-around py-3 px-32 fixed top-0 min-w-screen text-blue-500'>
+        <div className='px-10'>
+          <Link to="/">Homepage</Link>
+        </div>
+        <div className='px-10'>
+          <Link to="/dashboard">Dashboard</Link>
+        </div>
 
     </div>
   )
